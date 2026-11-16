@@ -1,0 +1,2 @@
+import {build} from 'esbuild';import fs from 'node:fs/promises';import {spawnSync} from 'node:child_process';
+await fs.mkdir('.tmp/tests',{recursive:true});const files=(await fs.readdir('tests')).filter(x=>x.endsWith('.test.ts'));await build({entryPoints:files.map(x=>'tests/'+x),outdir:'.tmp/tests',outExtension:{'.js':'.mjs'},bundle:true,platform:'node',format:'esm',packages:'external'});const r=spawnSync(process.execPath,['--test',...files.map(x=>'.tmp/tests/'+x.replace('.ts','.mjs'))],{stdio:'inherit'});process.exit(r.status??1);

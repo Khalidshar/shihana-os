@@ -1,0 +1,10 @@
+node_modules/
+dist/
+apps/hud/dist/
+os.config.json
+vault/
+.tmp/
+test-results/
+playwright-report/
+*.log
+.history/
