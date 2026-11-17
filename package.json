@@ -13,8 +13,9 @@
     "start": "node scripts/start.mjs",
     "preview": "node scripts/start.mjs --browser",
     "dev": "node scripts/dev.mjs",
-    "doctor": "node --experimental-strip-types scripts/doctor.ts",
-    "ws:test": "node --experimental-strip-types scripts/ws-test.ts"
+    "doctor": "node scripts/task.mjs doctor",
+    "ws:test": "node scripts/task.mjs ws-test",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p apps/hud/tsconfig.json"
   },
   "dependencies": {
     "ws": "https://registry.npmjs.org/ws/-/ws-8.23.0.tgz"

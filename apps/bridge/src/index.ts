@@ -1,4 +1,9 @@
 import {loadConfig,initializeVault} from './config.js';
+import {createBridge} from './server.js';
 const config=await loadConfig();
-await initializeVault(config);
-console.log(`${config.osName}: vault ready at ${config.vaultPath}`);
+const token=await initializeVault(config);
+const bridge=createBridge(config,token);
+await bridge.vault.index();
+await bridge.listen(Number(process.env.SHIHANA_PORT)||4317);
+console.log(`${config.osName}: http://127.0.0.1:${process.env.SHIHANA_PORT||4317} · vault ready`);
+let stopping=false;for(const signal of ['SIGINT','SIGTERM'] as const)process.on(signal,async()=>{if(stopping)return;stopping=true;await bridge.close();process.exit(0)});

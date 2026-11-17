@@ -1,0 +1,2 @@
+import{build}from'esbuild';import{spawn}from'node:child_process';
+const task=process.argv[2];if(!['doctor','ws-test'].includes(task))throw new Error('Unknown task');const file=`.tmp/${task}.mjs`;await build({entryPoints:[`scripts/${task}.ts`],bundle:true,platform:'node',format:'esm',packages:'external',outfile:file});const child=spawn(process.execPath,[file,...process.argv.slice(3)],{stdio:'inherit'});child.on('exit',code=>process.exitCode=code??1);
