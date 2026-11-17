@@ -1,0 +1,50 @@
+Validation UTC 2026-11-17T00:30:33.388Z
+Node v24.21.0 / win32 x64
+
+$ node scripts/test.mjs
+✔ HTTP authentication, vault traversal, links, facts, foundations, sessions and real availability (227.2562ms)
+✔ WS UTF-8 streaming and cross engine shared handoff (149.6799ms)
+✔ outside writable folder emits permission request and denial prevents write (92.3664ms)
+✔ approval permits scoped write and verifier rejects empty or invalid artifacts (39.2551ms)
+✔ JSON healer repairs fences and trailing commas; ambiguous JSON fails closed (1.0171ms)
+✔ process runner passes Arabic via stdin unchanged and enforces timeout (272.803ms)
+✔ cancel kills child and grandchild process tree (104.276ms)
+✔ localOnly blocks cloud at adapter entry before spawning (31.9846ms)
+✔ first run seeds vault; repeat preserves user content and token (85.8216ms)
+✔ 8 real skill packages: metadata validation, search, filter, pin persistence and missing tools (212.714ms)
+✔ skill executes instructions and helper tool via approval, writes promised artifact and verifies before done (209.7537ms)
+✔ verification failure invokes one correction and never emits done when output missing (104.5501ms)
+✔ /learn only drafts from completed session; approval saves v2 package and rejects overwrite (108.9738ms)
+✔ foundation demand toggle actually removes text from shared chat context (107.7861ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1042.7896
+
+EXIT 0
+
+$ node node_modules/typescript/bin/tsc --noEmit -p tsconfig.json
+
+EXIT 0
+
+$ node node_modules/typescript/bin/tsc --noEmit -p apps/hud/tsconfig.json
+
+EXIT 0
+
+$ node scripts/build.mjs
+Bridge + HUD build succeeded
+
+EXIT 0
+
+$ node scripts/smoke.mjs
+PASS: built process serves HUD JS/CSS, 8 valid skills, health, auth 401, foreign origin 403 and CSP
+Real engine detection: {"claude":{"installed":true,"version":"2.1.323 (Claude Code)"},"codex":{"installed":true,"version":"codex-cli 0.162.1"},"gemini":{"installed":true,"version":"0.68.0"},"hermes":{"installed":false,"reason":"Not connected: command not installed: hermes"}}
+Speech: {"up":false,"ttsProvider":null,"reason":"Not set up · phase 5"}
+PASS: owned bridge shutdown closes port 4321
+
+EXIT 0
+

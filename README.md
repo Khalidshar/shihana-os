@@ -1,8 +1,41 @@
-# Shihana
+# الشيهانة · Shihana
 
-Local Windows Agentic OS. Node.js 20+ and Git required.
+تطبيق شخصي محلي: خزنة Markdown مشتركة، محادثة متعددة المحركات، ذاكرة، ملفات، وثماني حزم مهارات مع أذونات وتحقق من المخرجات. تنفيذ المراحل 0–3 مع القيود المبينة في [PROGRESS.md](PROGRESS.md) و[DIAGNOSTICS.md](DIAGNOSTICS.md).
 
-Install: `npm.cmd install`. Build: `npm.cmd run build`.
-Configuration is copied from `os.config.example.json` on first run. Default vault stays inside the project (`./vault`); change `vaultPath` to use another folder. Existing files are never overwritten by initialization.
+يلزم Node.js 24 أو أحدث للنسخ المثبتة هنا. من PowerShell في هذا المجلد:
 
-Implementation and evidence are recorded phase by phase in PROGRESS.md.
+```powershell
+npm.cmd install
+npm.cmd run build
+npm.cmd run preview
+```
+
+الأمر الأخير يشغّل الجسر وواجهة المتصفح على `127.0.0.1:4317` ويطبع رابط المعاينة المحلي المزوّد برمز الخزنة. افتح الرابط في المتصفح؛ لا تشاركه. الرمز يُحذف من شريط العنوان بعد الدخول. عند فتح العنوان دون الرمز، أدخل محتوى `vault/.os/token` في شاشة الاتصال. للإيقاف: Ctrl+C في الطرفية.
+
+سطح المكتب: `npm.cmd start` يفتح Electron frameless ويشغّل الجسر التابع له. **سياسة Device Guard تحظر Electron في بيئة البناء الحالية**؛ لم تُعطّل الحماية. استخدم معاينة المتصفح هنا. إغلاق نافذة سطح المكتب ينهي الجسر الذي أنشأته. الصوت غير معدّ في المراحل 0–3 ولا يحجب الإقلاع.
+
+للتطوير: `npm.cmd run dev` (watch للواجهة؛ إعادة التشغيل مطلوبة لتغييرات الجسر). للتحقق:
+
+```powershell
+npm.cmd test
+npm.cmd run typecheck
+npm.cmd run build
+node scripts/smoke.mjs
+npm.cmd run doctor
+```
+
+`npm.cmd run ws:test -- "ردّي بكلمة مرحبا" codex` يختبر محركًا حقيقيًا بعد إعداد حساب CLI. اختبارات النواة تستخدم FakeEngine صراحةً؛ لا تعني اتصالًا حيًا. Claude وCodex وGemini مكتشفة محليًا، لكن الحسابات لم تجتز اختبار محادثة ناجحًا. Hermes غير معدّ. لا توجد بيانات استعمال أو اتصالات وهمية.
+
+الإعداد يُنسخ من `os.config.example.json` أول مرة. الخزنة الافتراضية `./vault` لتجنب الكتابة خارج المشروع. عدّل `vaultPath` و`workspaces` من الملف عند الحاجة. التهيئة تضيف ملفات مفقودة فقط؛ لا تستبدل ملفات المستخدم. لا تُدرج ملفات الخزنة أو التوكن أو الإعداد الخاص في Git.
+
+في المهارات: ابحث وصفِّ وثبّت؛ الأداة المفقودة تمنع التشغيل. `/learn` يتطلب محادثة مكتملة وينشئ مسودة للعرض؛ الحفظ يحتاج زر «الموافقة والحفظ». تحرير ملفات الأساس يراعي المجلدات المسموحة. المهارات البحثية التي تحتاج web_reader/doc_converter تنتظر المراحل 5 و8.
+
+تثبيت offline المستخدم في هذه البيئة: `npm.cmd install --offline --ignore-scripts --no-audit --no-fund --cache .tmp/npm-cache`. حزمها عناوين npm الرسمية ثابتة الإصدار مع integrity في lockfile. ثم `node node_modules/electron/install.js` استخدم أرشيف Electron الرسمي المتاح محليًا. الاستعاضة عن Fastify/Vite/three.js والخطوط وReact 18 موثقة؛ لا ندّعي مطابقة البنية كاملة.
+
+التزامات المراحل في دليل `.history` لأن البيئة تمنع الكتابة في `.git`:
+
+```powershell
+git --git-dir=.history --work-tree=. log --oneline
+```
+
+الفحوص البشرية المعلّقة في [HUMAN_CHECKS.md](HUMAN_CHECKS.md). المصادر الرسمية والبلاغات في [SOURCES.md](SOURCES.md) وسجل التقدم.

@@ -43,4 +43,23 @@
 - npm: الخطأ EACCES مثبت من سجل الشبكة. ENOTCACHED تكرر عند وجود tarball وغياب metadata؛ التثبيت بعناوين tarball وإصدارات ثابتة وcache قابل للكتابة اجتاز فعليًا. المراجع: https://github.com/npm/cli/issues/7781 وhttps://docs.npmjs.com/cli/v11/using-npm/config#offline. البلاغ أقدم من npm 11.19.0، واستُخدم لفهم السلوك لا لنسخ حل.
 - Windows shims: reproducer doctor أعاد ENOENT لملف Unix shim ثم لـ node.exe غير الموجود؛ فحص محتوى `.cmd` أثبت مسار EXE في Claude ومسار JS في Codex. التعديل يحل الملفات الموجودة فقط دون shell؛ doctor أكد الإصدارين الصحيحين، وإعادة الاختبارات نجحت.
 
-## المرحلة 3 — لم تبدأ بعد
+## المرحلة 3 — منفذة ومختبرة آليًا؛ تجربة المحركات والواجهة البشرية معلّقة
+
+- ثماني حزم Skill Package v2 فعلية داخل vault-template/skills مع تعليمات وKnown Pitfalls ومخرجات محددة وقواعد تحقق. repo-inspector يحتوي helper فعليًا. فحص العقود، البحث والتصفية، pin محفوظ في state، منع التشغيل عند غياب required_tools، وأحداث WS لتشغيل المهارة.
+- الملفات: بحث ومجلدات، قراءة وتحرير مضبوط بالصلاحيات، روابط عكسية. الذاكرة: ثماني بطاقات مع تبديل chat/demand، وحقائق CRUD/enable. الواجهة لا تقدم أرقامًا أو اتصالًا وهميًا.
+- `/learn`: محرك يحلل جلسة مكتملة ويعيد مسودة عقد وسكربتات. تُعرض للمراجعة، ولا تُحفظ إلا عبر approval صريح. منع traversal ورفض استبدال مهارة موجودة. واجهة النموذج الحي غير مجتازة بسبب حسابات/بيئة CLI؛ الفحص الآلي يستعمل FakeEngine.
+- فحص تشغيل skill نفّذ helper Node حقيقيًا بعد بطاقة إذن، قرأ stdout، ثم كتب output/repo-audit.md وتحقق من حجمه ونوعه وتحديثه قبل chat.done. المحرك نفسه FakeEngine؛ لا يُحتسب اتصالًا حيًا.
+- فحص فشل التحقق أثبت محاولة تصحيح واحدة فقط، ثم chat.error وعدم صدور chat.done عند غياب المخرج. التحقق لا يعتمد على ادعاء النموذج أنه كتب ملفًا.
+- فحص أولي: tests 14, pass 13, fail 1. إعادة إنتاج منفردة: `node --test --test-name-pattern='foundation demand' .tmp/tests/skills.test.mjs` أعاد pass 0/fail 1. السبب المثبت: توسيع [[writing]] من os-guide أعاد ملف writing رغم mode=demand. التعديل: قائمة استبعاد للاختيارات الصريحة demand أثناء توسيع الروابط، مع احترام إعداد بطاقات الأساس عند اختيار ملفات السياق أصلًا. إعادة الاختبار: **14/14 pass، fail 0، skipped 0**، دون تعطيل assertion.
+- روجعت https://obsidian.md/help/links والمستودع الرسمي https://github.com/obsidianmd/obsidian-skills/blob/main/plugins/obsidian/skills/obsidian-markdown/SKILL.md ومناقشات https://forum.obsidian.md/t/how-does-disable-use-wikilinks-work/18333 . لم يُعثر على بلاغ مطابق لهذا الخطأ الخاص بالمشروع أو إصدار Windows؛ لم ننسب الخطأ إلى Obsidian ولم ننسخ حلًا منه.
+- آخر `npm.cmd run typecheck`: exit 0. `npm.cmd run build`: `Bridge + HUD build succeeded`، exit 0.
+- `node scripts/smoke.mjs`: PASS للتشغيل المبني، تقديم HTML/JS/CSS، ثماني حزم صحيحة، health، رفض 401 دون token، رفض 403 لـ Origin خارجي، CSP، وإغلاق المنفذ 4321 بعد إيقاف bridge التابع للفحص.
+- كشف الأدوات تغيّر أثناء العمل: آخر doctor/smoke يجد Claude 2.1.323، Codex 0.162.1، **Gemini 0.68.0**، وHermes غير مثبت. شُغّل `gemini.cmd --help` و`--version` فعليًا؛ help يثبت stream-json وapproval-mode plan. لا نزعم تثبيت Gemini بأنفسنا أو تحقق تسجيل دخوله.
+- تثبيت offline النهائي بعد تقليص overrides إلى الاعتماديات المستخدمة: `up to date in 489ms`، exit 0.
+- قراءة المواصفة الأصلية كاملة وحفظها دون تغيير؛ الفحوص البشرية موثقة في HUMAN_CHECKS.md. لم ننفّذ المراحل 4–9.
+
+## حالة التسليم
+
+المراحل 0–3 لها تنفيذ والتزامات منفصلة، **لكن القبول الكامل غير مجتاز**: اختلافات البنية المفروضة بتوافر الحزم، حظر Electron، غياب transport Hermes، وعدم نجاح محادثة محرك حي أو مراجعة بصرية. لم تُختلق نتائج لتجاوز هذه الحدود. نواة HTTP/WS والمهارات والذاكرة والملفات قابلة للتشغيل ومختبرة.
+
+أوامر التحقق الآلي ومخرجاتها النهائية الفعلية في `evidence/final-validation.txt` ويولّدها `node scripts/validate.mjs` (يتوقف عند أول فشل). أمر المعاينة: `npm.cmd run preview`؛ يطبع رابط الدخول المحلي. أمر Electron عند السماح به: `npm.cmd start`.
