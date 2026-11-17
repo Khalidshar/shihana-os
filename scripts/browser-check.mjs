@@ -1,0 +1,1 @@
+import{build}from'esbuild';import{spawn}from'node:child_process';await build({entryPoints:['scripts/browser-check.ts'],bundle:true,platform:'node',format:'esm',packages:'external',outfile:'.tmp/browser-check.mjs'});const p=spawn(process.execPath,['.tmp/browser-check.mjs'],{stdio:'inherit'});p.on('exit',code=>process.exitCode=code??1);

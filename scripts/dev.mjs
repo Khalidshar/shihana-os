@@ -1,0 +1,2 @@
+import{context}from'esbuild';import{spawn}from'node:child_process';
+const ctx=await context({entryPoints:['apps/hud/src/main.tsx'],bundle:true,format:'esm',jsx:'automatic',outdir:'apps/hud/dist',loader:{'.woff2':'file','.woff':'file'},sourcemap:true});await ctx.watch();const p=spawn(process.execPath,['scripts/start.mjs'],{stdio:'inherit'});p.on('exit',async code=>{await ctx.dispose();process.exitCode=code??1});

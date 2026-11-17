@@ -26,6 +26,21 @@
 - لم ننتقل باعتبار جميع القبول ناجحًا؛ نكمل الأجزاء المستقلة من HUD والمهارات فوق النواة المختبرة. المطابقة الكاملة للبنية وللمحركات الأربعة غير مجتازة.
 - Git العادي فشل: `.git/index.lock: Permission denied` بسبب كون `.git` للقراءة فقط. الالتزامات الفعلية في `.history`، استعرضها بـ `git --git-dir=.history --work-tree=. log --oneline`. التزام المرحلة 0: `f970cab`.
 
-## المرحلة 2 — لم تبدأ بعد
+## المرحلة 2 — HUD وElectron منفذان؛ فحوص النافذة والبصر محجوبة
+
+- واجهة React بثلاثة أعمدة، RTL/LTR، محادثة WS وحالات الخطوات والأذونات والتحقق، أربع سمات ومشهد WebGL ثلاثي الأبعاد يتدرّج بين مجرة وكرة وحلقات وشبكة. الاسم مصدره config. وضع الخصوصية يطمس المسارات وعناوين الجلسات.
+- Electron frameless/maximized مع renderer sandbox وcontextIsolation وnodeIntegration=false، IPC محدود، F11، tray، واختصارات. ينتظر bridge فقط؛ speech غير معدّ ولا يحجب النص. يغلق bridge الذي أنشأه عند الخروج.
+- `node node_modules/electron/install.js`: exit 0، استخرج النسخة الرسمية 45.3.2 من cache. `node scripts/ui-check.mjs` فشل قبل فتح النافذة؛ أعيد إنتاجه بـ DEBUG=pw:browser، والسجل أكد `electron.exe was blocked by your organization's Device Guard policy`. التشغيل المباشر لـ electron.exe أعاد `An Application Control policy has blocked this file`. لم تُغيّر حماية Windows أو sandbox.
+- راجعت https://www.electronjs.org/docs/latest/api/browser-window/ وhttps://playwright.dev/docs/api/class-electron وhttps://github.com/microsoft/playwright/issues/32027 وhttps://github.com/microsoft/playwright-vscode/issues/100. البلاغات لنسخ أقدم وليست دليل تطابق مع Electron 45.3.2 / Playwright 1.62.1.
+- مصدر سياسة الحظر: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/wdac-and-applocker-overview وhttps://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/appcontrol-debugging-and-troubleshooting. لم يُستخدم تعطيل السياسة كإصلاح.
+- بدأ فحص Edge sandboxed عبر Playwright ثم تعذّر إتمام التشغيل في البيئة؛ لا تُعد assertions الموجودة في السكربت نتائج ناجحة. محاولة أداة التحكم بالحاسوب: مضيف browser غير متاح؛ قراءة نافذة Chrome أعادت أن النافذة مصغّرة. لا توجد لقطة معاينة موثقة أو مراجعة بصرية ناجحة.
+- `node dist/bridge.mjs` مع SHIHANA_PORT=4319: `الشيهانة: http://127.0.0.1:4319 · vault ready`؛ الخادم يعمل. أُضيف تطابق Origin مع منفذ الخادم الفعلي، مع الإبقاء على منع origins الخارجية وCSP.
+- فحوص typecheck/build السابقة: exit 0. إعادة فحوص النواة قبل الالتزام مسجلة في خرج الأدوات. قبول النافذة frameless، morphing المرئي، إغلاق شجرة التطبيق **معلّق**؛ نتابع المرحلة 3 المستقلة عن تشغيل Electron.
+
+### تشخيص أخطاء المرحلة 1 ومصادرها
+
+- Codex home: تكرّر عبر WS حقيقي؛ سبب صلاحيات/اكتشاف home داخل sandbox هو **فرضية** وليست مثبتة جذريًا. https://github.com/openai/codex/issues/45871 وhttps://github.com/openai/codex/issues/17458 يصفان أعراضًا قريبة على Windows AppContainer؛ لا يوجد بلاغ متحقق مطابق للإصدار 0.162.1 هنا. لم تُنقل credentials أو تُخفف الحماية. الفحص الحي ما زال فاشلًا.
+- npm: الخطأ EACCES مثبت من سجل الشبكة. ENOTCACHED تكرر عند وجود tarball وغياب metadata؛ التثبيت بعناوين tarball وإصدارات ثابتة وcache قابل للكتابة اجتاز فعليًا. المراجع: https://github.com/npm/cli/issues/7781 وhttps://docs.npmjs.com/cli/v11/using-npm/config#offline. البلاغ أقدم من npm 11.19.0، واستُخدم لفهم السلوك لا لنسخ حل.
+- Windows shims: reproducer doctor أعاد ENOENT لملف Unix shim ثم لـ node.exe غير الموجود؛ فحص محتوى `.cmd` أثبت مسار EXE في Claude ومسار JS في Codex. التعديل يحل الملفات الموجودة فقط دون shell؛ doctor أكد الإصدارين الصحيحين، وإعادة الاختبارات نجحت.
 
 ## المرحلة 3 — لم تبدأ بعد
