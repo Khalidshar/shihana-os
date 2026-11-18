@@ -1,1 +1,1 @@
-{"name":"@shihana/desktop","version":"0.1.0","private":true,"main":"main.cjs"}
+{"name":"@shihana/desktop","version":"0.1.0","private":true,"main":"main.cjs","scripts":{"build:installer":"node ../../scripts/build-installer.mjs"}}

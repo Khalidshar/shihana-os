@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=الشيهانة
+Comment=Personal Local Agentic OS
+Exec=/bin/bash -lc "cd /workspaces/shihana-os && npm run desktop"
+Icon=applications-system
+Terminal=false
+Categories=Development;Utility;

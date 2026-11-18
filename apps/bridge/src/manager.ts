@@ -25,11 +25,6 @@ export class ShihanaEngineManager {
         return JSON.parse(readFileSync(this.statePath, 'utf-8'));
       } catch (e) {}
     }
-    return {
-      activeEngine: 'claude-local-bridge',
-      dialect: 'saudi',
-      dockerContainersRunning: 4,
-      privacyMode: true
-    };
+    return {activeEngine:'Not connected',dialect:'saudi',dockerContainersRunning:0,privacyMode:true};
   }
 }

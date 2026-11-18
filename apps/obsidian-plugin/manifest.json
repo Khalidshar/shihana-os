@@ -1,0 +1,9 @@
+{
+  "id": "shihana-os",
+  "name": "الشيهانة",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Local Shihana HUD embedded in Obsidian",
+  "author": "Shihana",
+  "isDesktopOnly": true
+}

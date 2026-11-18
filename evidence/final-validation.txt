@@ -1,29 +1,31 @@
-Validation UTC 2026-11-17T00:30:33.388Z
-Node v24.21.0 / win32 x64
+Validation UTC 2026-11-18T13:20:25.303Z
+Node v24.22.2 / linux x64
 
 $ node scripts/test.mjs
-✔ HTTP authentication, vault traversal, links, facts, foundations, sessions and real availability (227.2562ms)
-✔ WS UTF-8 streaming and cross engine shared handoff (149.6799ms)
-✔ outside writable folder emits permission request and denial prevents write (92.3664ms)
-✔ approval permits scoped write and verifier rejects empty or invalid artifacts (39.2551ms)
-✔ JSON healer repairs fences and trailing commas; ambiguous JSON fails closed (1.0171ms)
-✔ process runner passes Arabic via stdin unchanged and enforces timeout (272.803ms)
-✔ cancel kills child and grandchild process tree (104.276ms)
-✔ localOnly blocks cloud at adapter entry before spawning (31.9846ms)
-✔ first run seeds vault; repeat preserves user content and token (85.8216ms)
-✔ 8 real skill packages: metadata validation, search, filter, pin persistence and missing tools (212.714ms)
-✔ skill executes instructions and helper tool via approval, writes promised artifact and verifies before done (209.7537ms)
-✔ verification failure invokes one correction and never emits done when output missing (104.5501ms)
-✔ /learn only drafts from completed session; approval saves v2 package and rejects overwrite (108.9738ms)
-✔ foundation demand toggle actually removes text from shared chat context (107.7861ms)
-ℹ tests 14
+✔ HTTP authentication, vault traversal, links, facts, foundations, sessions and real availability (326.159743ms)
+✔ WS UTF-8 streaming and cross engine shared handoff (98.883118ms)
+✔ outside writable folder emits permission request and denial prevents write (91.640074ms)
+✔ approval permits scoped write and verifier rejects empty or invalid artifacts (29.798911ms)
+✔ web reader blocks private targets and external-data writes require approval (19.659927ms)
+✔ JSON healer repairs fences and trailing commas; ambiguous JSON fails closed (2.19624ms)
+✔ process runner passes Arabic via stdin unchanged and enforces timeout (209.987372ms)
+✔ cancel kills child and grandchild process tree (45.137603ms)
+✔ localOnly blocks cloud at adapter entry before spawning (24.8967ms)
+✔ Ollama local adapter detects models and streams chat without cloud CLI (53.320429ms)
+✔ first run seeds vault; repeat preserves user content and token (48.16408ms)
+✔ 8 real skill packages: metadata validation, search, filter, pin persistence and missing tools (195.914ms)
+✔ skill executes instructions and helper tool via approval, writes promised artifact and verifies before done (173.808224ms)
+✔ verification failure invokes one correction and never emits done when output missing (90.177665ms)
+✔ /learn only drafts from completed session; approval saves v2 package and rejects overwrite (115.270432ms)
+✔ foundation demand toggle actually removes text from shared chat context (86.178951ms)
+ℹ tests 16
 ℹ suites 0
-ℹ pass 14
+ℹ pass 16
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 1042.7896
+ℹ duration_ms 1987.278297
 
 EXIT 0
 
@@ -42,8 +44,8 @@ EXIT 0
 
 $ node scripts/smoke.mjs
 PASS: built process serves HUD JS/CSS, 8 valid skills, health, auth 401, foreign origin 403 and CSP
-Real engine detection: {"claude":{"installed":true,"version":"2.1.323 (Claude Code)"},"codex":{"installed":true,"version":"codex-cli 0.162.1"},"gemini":{"installed":true,"version":"0.68.0"},"hermes":{"installed":false,"reason":"Not connected: command not installed: hermes"}}
-Speech: {"up":false,"ttsProvider":null,"reason":"Not set up · phase 5"}
+Real engine detection: {"claude":{"installed":false,"reason":"Not connected: command not installed: claude"},"codex":{"installed":false,"reason":"Not connected: command not installed: codex"},"gemini":{"installed":false,"reason":"Not connected: command not installed: gemini"},"hermes":{"installed":false,"reason":"Ollama not connected at 127.0.0.1:11434"}}
+Speech: {"up":false,"ttsProvider":null,"reason":"Speech service unavailable"}
 PASS: owned bridge shutdown closes port 4321
 
 EXIT 0

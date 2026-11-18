@@ -1,0 +1,9 @@
+{
+  "name": "@shihana/obsidian-plugin",
+  "private": true,
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "build": "node build.mjs"
+  }
+}

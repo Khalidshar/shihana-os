@@ -19,6 +19,38 @@ export class CLIEngine implements Engine{
 export class ClaudeEngine extends CLIEngine{constructor(c:Config){super('claude',c)}}
 export class CodexEngine extends CLIEngine{constructor(c:Config){super('codex',c)}}
 export class GeminiEngine extends CLIEngine{constructor(c:Config){super('gemini',c)}}
-export class HermesEngine extends CLIEngine{constructor(c:Config){super('hermes',c)}}
+export class HermesEngine implements Engine{
+ constructor(public config:Config){ }
+ get id():EngineId{return'hermes'}
+ async detect(){
+  try{
+   const response=await fetch(`${this.config.engines.hermes.ollamaUrl||'http://127.0.0.1:11434'}/api/tags`,{signal:AbortSignal.timeout(2000)});
+   if(!response.ok)return{installed:false,reason:'Ollama returned HTTP '+response.status};
+   const data=await response.json() as {models?:{name:string}[]};
+   const models=(data.models||[]).map(x=>x.name);
+   return{installed:true,version:'Ollama '+(models.length?models.length+' models':'no models loaded'),reason:models.join(', ')};
+  }catch(e:any){return{installed:false,reason:'Ollama not connected at 127.0.0.1:11434'}}
+ }
+ async *run(opts:RunOptions):AsyncGenerator<EngineEvent>{
+  if(!this.config.localOnlyMode&&opts.prompt.length===0)throw new Error('Invalid prompt');
+  const base=this.config.engines.hermes.ollamaUrl||'http://127.0.0.1:11434';
+  const tags=await fetch(`${base}/api/tags`,{signal:opts.signal});
+  if(!tags.ok)throw new Error('Ollama is not connected');
+  const tagData=await tags.json() as {models?:{name:string}[]};
+  if(!tagData.models?.length)throw new Error('No local Ollama models are installed');
+  const preferred=opts.model||this.config.engines.hermes.models[0]||tagData.models[0].name;
+  if(!tagData.models.some(x=>x.name===preferred))throw new Error(`Local Ollama model not found: ${preferred}`);
+  const prompt=`${opts.handoffContext||''}\n${opts.prompt}\n\nIf the task requires a bridge action, return exactly one JSON object {"tool":"vault_graph|safe_shell|artifact_verifier|web_reader","args":{...}}. Otherwise return concise natural text.`;
+  const response=await fetch(`${base}/api/chat`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({model:preferred,stream:true,messages:[{role:'system',content:'You are Shihana, a precise Saudi-Arabic local coding assistant. Do not claim tools or files were changed unless a bridge result confirmed it.'},{role:'user',content:prompt}],options:{temperature:0.2}}),signal:opts.signal});
+  if(!response.ok||!response.body)throw new Error(`Ollama chat failed: HTTP ${response.status}`);
+  const decoder=new TextDecoder();let buffer='';
+  for await(const chunk of response.body as AsyncIterable<Uint8Array>){
+   buffer+=decoder.decode(chunk,{stream:true});
+   const lines=buffer.split('\n');buffer=lines.pop()||'';
+   for(const line of lines){if(!line.trim())continue;let data:any;try{data=JSON.parse(line)}catch{continue}const text=data.message?.content;if(typeof text==='string'&&text)yield{type:'text',text};if(data.done&&data.error)throw new Error(data.error)}
+  }
+  if(buffer.trim())try{const data=JSON.parse(buffer);const text=data.message?.content;if(typeof text==='string'&&text)yield{type:'text',text}}catch{}
+ }
+}
 export class FakeEngine implements Engine{constructor(public id:EngineId='codex',public respond:(o:RunOptions)=>EngineEvent[]=o=>[{type:'text',text:o.prompt}]){}async detect(){return{installed:false,reason:'TEST ONLY'}}async *run(o:RunOptions){o.signal.throwIfAborted();for(const e of this.respond(o))yield e}}
 export function engines(c:Config):Record<EngineId,Engine>{return{claude:new ClaudeEngine(c),codex:new CodexEngine(c),gemini:new GeminiEngine(c),hermes:new HermesEngine(c)}}

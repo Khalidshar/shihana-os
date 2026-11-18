@@ -12,6 +12,7 @@
     "test": "node scripts/test.mjs",
     "start": "node scripts/start.mjs",
     "preview": "node scripts/start.mjs --browser",
+    "desktop": "node scripts/desktop-launch.mjs",
     "dev": "node scripts/dev.mjs",
     "doctor": "node scripts/task.mjs doctor",
     "ws:test": "node scripts/task.mjs ws-test",

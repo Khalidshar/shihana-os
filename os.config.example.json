@@ -1,6 +1,6 @@
 {
   "osName": "الشيهانة", "assistantName": "الشيهانة", "ownerName": "خالد", "uiLanguage": "ar", "avatarPath": "",
-  "vaultPath": "./vault", "workspaces": [], "defaultEngine": "codex", "localOnlyMode": false,
+  "vaultPath": "./vault", "workspaces": [], "defaultEngine": "hermes", "localOnlyMode": true,
   "agentLimits": {"maxSteps": 15, "commandTimeoutMs": 60000},
   "permissions": {"mode": "tiered", "writableFolders": [".os", "sessions", "daily", "_inbox", "core", "output", "skills"]},
   "engines": {"claude": {"command": "claude", "models": []}, "codex": {"command": "codex", "models": []}, "gemini": {"command": "gemini", "models": []}, "hermes": {"command": "hermes", "protocol": "cli", "ollamaUrl": "http://127.0.0.1:11434", "models": []}},
